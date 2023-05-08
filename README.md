@@ -1,2 +1,2 @@
-# diploma_external_api
+# Diploma external api
 External API for automatic text paraphrasing recognition
