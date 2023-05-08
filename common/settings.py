@@ -18,10 +18,20 @@ from dotenv import dotenv_values
 if os.environ.get('VARIABLES_INITIALIZED'):
     DEBUG = bool(int(os.environ.get('DEBUG')))
     SECRET_KEY: str = os.environ.get('SECRET_KEY')
+    DB_USER = os.environ.get('DB_USER')
+    DB_USER_PASSWORD = os.environ.get('DB_USER_PASSWORD')
+    DB_NAME = os.environ.get('DB_NAME')
+    DB_HOST = os.environ.get('DB_HOST')
+    DB_PORT = os.environ.get('DB_PORT')
 else:
     config = dotenv_values('.env.developer')
     DEBUG = bool(int(config.get('DEBUG', True)))
     SECRET_KEY: str = config['SECRET_KEY']
+    DB_USER = config.get('DB_USER')
+    DB_USER_PASSWORD = config.get('DB_USER_PASSWORD')
+    DB_NAME = config.get('DB_NAME')
+    DB_HOST = config.get('DB_HOST')
+    DB_PORT = config.get('DB_PORT')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,8 +92,12 @@ WSGI_APPLICATION = 'common.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_USER_PASSWORD,
+        'HOST': DB_HOST,
+        'PORT': DB_PORT,
     }
 }
 
