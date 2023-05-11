@@ -17,10 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-api_prefix = 'api/v1/'
+api_prefix = 'api/v1'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(f'{api_prefix}session-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path(f'{api_prefix}accounts/', include('accounts.urls')),
+    path(f'{api_prefix}/session-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path(f'{api_prefix}/oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    path(f'{api_prefix}/accounts/', include('accounts.urls')),
 ]

@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny
 from pydantic import BaseModel, Field
 
 from common.api_utils import json_request, json_bad_request, json_404
@@ -18,6 +18,8 @@ class AccountCreateData(BaseModel):
 
 class AccountCreate(APIView):
     """Create user account"""
+    permission_classes = [AllowAny]
+
     @json_request(AccountCreateData)
     def post(self, request: HttpRequest, data: AccountCreateData) -> Response:
         """Method to create account"""
@@ -30,8 +32,6 @@ class AccountCreate(APIView):
 
 class AccountDetail(APIView):
     """Methods of a specific account"""
-    permission_classes = [IsAuthenticated]
-
     def get(self, request: HttpRequest, user_id: int) -> Response:
         """Get public account information"""
         try:

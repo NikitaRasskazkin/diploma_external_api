@@ -5,3 +5,4 @@ psycopg2-binary==2.9.5
 pydantic==1.10.7
 mypy==1.2.0
 django-stubs==4.2.0
+django-oauth-toolkit==2.2.0
