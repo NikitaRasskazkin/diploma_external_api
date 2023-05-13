@@ -5,9 +5,11 @@ from dataclasses import dataclass
 from django.contrib.auth.models import User
 from django.shortcuts import reverse
 from django.core.exceptions import ObjectDoesNotExist
+from django.utils import timezone
 
 from ..models import Report
 from .exceptions import ReportDoesNotExist
+from .calculation_manager import worker
 
 
 class ReportStatus(str, Enum):
@@ -49,12 +51,12 @@ class ReportManager:
 
     @classmethod
     def create(cls, text: str, user: User) -> Self:
-        report = Report(text=text, user=user, status=Report.ReportStatus.WAITING)
+        report = Report(text=text, user=user, status=Report.ReportStatus.WAITING, create_dttm=timezone.now())
         report.save()
         return ReportManager(report)
 
     def calculate(self) -> None:
-        pass
+        worker.start(self.report)
 
     def get_report_info(self) -> ReportInfo:
         self.report.refresh_from_db()

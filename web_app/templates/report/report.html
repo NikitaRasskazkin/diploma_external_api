@@ -14,7 +14,7 @@
 
 <div class="m-3 ms-5 me-5">
     <h5 id="title"></h5>
-    <label for="source-text" id="source-text-label" class="mb-2">Исходный текст:</label>
+    <label for="source-text" id="source-text-label" class="mb-2"></label>
     <div id="source-text" class="card p-3">
 
     </div>
@@ -49,7 +49,8 @@
                 return;
             }
             this.__is_completed = report.status === 'COMPLETED' || report.status === 'ERROR';
-            if (this.__is_completed) {
+            if (report.status === 'COMPLETED') {
+                $('#source-text').html(report.text);
                 $('#source-text-label').html('Отчёт:');
             } else {
                 $('#source-text').html(report.text);
@@ -59,6 +60,7 @@
             switch (report.status) {
                 case 'WAITING': title = `В очереди на формирование отчёта: ${report.order}`; break;
                 case 'IN_PROCESS': title = `Идёт формирование отчёта`; break;
+                case 'ERROR': title = `При формировании отчёта произошла ошибка`; break;
                 default: title = 'Отчёт';
             }
             $('#title').html(title);
