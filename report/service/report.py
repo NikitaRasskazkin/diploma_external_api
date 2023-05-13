@@ -10,7 +10,7 @@ from ..models import Report
 from .exceptions import ReportDoesNotExist
 
 
-class ReportStatus(Enum):
+class ReportStatus(str, Enum):
     WAITING = 'WAITING'
     IN_PROCESS = 'IN_PROCESS'
     COMPLETED = 'COMPLETED'
@@ -58,10 +58,16 @@ class ReportManager:
 
     def get_report_info(self) -> ReportInfo:
         self.report.refresh_from_db()
+        statuses = {
+            'W': 'WAITING',
+            'P': 'IN_PROCESS',
+            'C': 'COMPLETED',
+            'E': 'ERROR',
+        }
         return ReportInfo(
             id=self.report.pk,
             text=self.report.text,
-            status=self.report.status,
+            status=ReportStatus[statuses[self.report.status]],
             user=self.report.user.pk,
             order=None,
             urls=ReportUrls(

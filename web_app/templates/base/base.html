@@ -15,7 +15,7 @@
 <nav class="navbar navbar-expand-lg bg-light">
   <div class="container-fluid">
     {% if user.is_authenticated %}
-    <a class="navbar-brand" href="{% url 'web_app:index' %}">
+    <a class="navbar-brand ms-3" href="{% url 'web_app:index' %}">
       <img src="/static/favicon.ico" alt="Logo" width="40" height="35" class="d-inline-block align-text-top">
     </a>
     <div class="nav-item dropdown">
@@ -33,7 +33,9 @@
       </ul>
     </div>
     {% else %}
-    <a class="navbar-brand">Перефразер</a>
+    <a class="navbar-brand ms-3" href="#">
+      <img src="/static/favicon.ico" alt="Logo" width="40" height="35" class="d-inline-block align-text-top">
+    </a>
     {% endif %}
   </div>
 </nav>
