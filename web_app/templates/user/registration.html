@@ -1,0 +1,74 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block 'title' %}Регистрация{% endblock %}
+
+{% block 'content' %}
+
+<div style="width: 50%; margin: 0 auto; margin-top: 20vh">
+    <div class="card p-4 content">
+        <h4 class="mb-4 text-center">Регистрация</h4>
+        <form class="d-grid">
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+                <input id="username" class="form-control" placeholder="Имя пользователя" maxlength="20" required>
+                <label for="username">Имя пользователя</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input id="password" type="password" class="form-control" placeholder="Пароль" maxlength="20" required>
+                <label for="password">Пароль</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input id="password-repeat" type="password" class="form-control" placeholder="Пароль" maxlength="20" required>
+                <label for="password-repeat">Пароль (повторить)</label>
+            </div>
+            <p id='error_msg' class="text-center" style="color: rgb(224, 46, 46)" hidden>error</p>
+            <button id="register" type="button" class="btn btn-primary">Создать пользователя</button>
+        </form>
+    </div>
+</div>
+<script>
+    const csrf_token = '{{ csrf_token }}';
+
+    function registerUser() {
+        $('#register').prop('disabled', true);
+        const password = $('#password').val();
+        const password_repeat = $('#password-repeat').val();
+        const user_name = $('#username').val();
+        let error_msg = null;
+        if (password === '' || password_repeat === '' || user_name === '') {
+            error_msg = 'Должны быть заполнены все поля';
+        } else if (password !== password_repeat) {
+            error_msg = 'Пароли не совпадают';
+        }
+        if (error_msg !== null) {
+            $('#error_msg').html(error_msg);
+            $('#error_msg').prop('hidden', false);
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "{% url 'accounts:list' %}",
+            headers: {'X-CSRFToken': csrf_token},
+            data: JSON.stringify({
+                user_name: user_name,
+                password: password,
+            }),
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (response) {
+                window.location.href = "{% url 'web_app:index' %}";
+            },
+            error: function (response, status) {
+                $('#error_msg').html('Такой пользователь уже существует');
+                $('#error_msg').prop('hidden', false);
+            }
+        });
+    }
+
+    $('#register').on('click', async () => {
+        registerUser();
+        $('#register').prop('disabled', false);
+    });
+</script>
+{% endblock %}

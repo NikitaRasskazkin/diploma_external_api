@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'web_app',
+    'report',
 ]
 
 MIDDLEWARE = [

@@ -24,7 +24,7 @@ def form_view(func: FormView) -> FormView:
     return wrapper
 
 
-def json_success_response(data: Any, status: int) -> Response:
+def json_success_response(data: Any, status: int = 200) -> Response:
     """Standard JSON response"""
     return Response({
         'success': True,

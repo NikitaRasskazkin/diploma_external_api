@@ -25,4 +25,5 @@ urlpatterns = [
     path(f'{api_prefix}/session-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path(f'{api_prefix}/oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     path(f'{api_prefix}/accounts/', include('accounts.urls')),
+    path(f'{api_prefix}/report/', include('report.urls')),
 ]

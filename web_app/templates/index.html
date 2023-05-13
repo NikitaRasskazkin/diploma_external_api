@@ -1,9 +1,38 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block 'title' %}INDEX{% endblock %}
+{% block 'title' %}Создание отчёта{% endblock %}
 
 {% block 'content' %}
 
-INDEX
+<div class="m-3 ms-5 me-5">
+    <h5 class="mb-3">Создание отчёта по тексту</h5>
+    <textarea id="source-text" class="form-control mb-3" maxlength="10000"></textarea>
+    <button id="create-report-btn" class="btn btn-primary">Создать отчёт</button>
+</div>
+{% endblock %}
+
+{% block 'script' %}
+<script>
+    const csrf_token = '{{ csrf_token }}';
+
+    function createReport() {
+        const data = {
+            text: $('#source-text').val(),
+        };
+        $.ajax({
+            type: "POST",
+            url: "{% url 'report:list' %}",
+            headers: {'X-CSRFToken': csrf_token},
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (response) {
+                window.location.href = response.data.urls.page;
+            }
+        });
+    }
+
+    $('#create-report-btn').on('click', createReport);
+</script>
 {% endblock %}
