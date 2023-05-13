@@ -20,6 +20,7 @@ from django.urls import path, include
 api_prefix = 'api/v1'
 
 urlpatterns = [
+    path('', include('web_app.urls')),
     path('admin/', admin.site.urls),
     path(f'{api_prefix}/session-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path(f'{api_prefix}/oauth/', include('oauth2_provider.urls', namespace='oauth2_provider')),

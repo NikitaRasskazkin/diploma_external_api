@@ -1,0 +1,34 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block 'title' %}Login{% endblock %}
+
+{% block 'content' %}
+
+<div style="width: 50%; margin: 0 auto; margin-top: 20vh">
+    <div class="card p-4 content">
+        <h4 class="mb-4 text-center">Авторизация</h4>
+        <form class="d-grid" method="post" action="{% url 'web_app:login' %}">
+            {% csrf_token %}
+            <div class="form-floating mb-3">
+                <input id="username" name="username" class="form-control" placeholder="Имя пользователя" required>
+                <label for="username">Имя пользователя</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input id="password" name="password" type="password" class="form-control" placeholder="Пароль" required>
+                <label for="password">Пароль</label>
+            </div>
+            {% if form.errors %}
+            <p class="text-center" style="color: rgb(224, 46, 46)">неверный логин или пароль</p>
+            {% endif %}
+            <button class="btn btn-primary">Войти</button>
+            <input id="next-page" type="hidden" name="next" value="{{ login }}">
+        </form>
+
+        <a class="btn btn-light mt-3" href="{% url 'web_app:registration' %}">Зарегистрироваться</a>
+    </div>
+</div>
+
+<script>
+</script>
+{% endblock %}

@@ -1,13 +1,15 @@
 from django.http import HttpRequest, Http404
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
 from django.db.utils import IntegrityError
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.permissions import AllowAny
 from pydantic import BaseModel, Field
 
-from common.api_utils import json_request, json_bad_request, json_404
+from common.api_utils import json_request, json_bad_request, json_404, json_success_response
 
 
 class AccountCreateData(BaseModel):
@@ -21,18 +23,21 @@ class AccountCreate(APIView):
     permission_classes = [AllowAny]
 
     @json_request(AccountCreateData)
-    def post(self, request: HttpRequest, data: AccountCreateData) -> Response:
+    def post(self, request: Request, data: AccountCreateData) -> Response:
         """Method to create account"""
         try:
             User.objects.create_user(data.user_name, password=data.password)
         except IntegrityError:
             return json_bad_request('Such a username already exists', errors=['UserNameError'])
-        return Response(data.dict(), status=201)
+        user = authenticate(username=data.user_name, password=data.password)
+        login(request, user)
+        response = {'user': {'id': user.pk, **data.dict()}}
+        return json_success_response(response, 201)
 
 
 class AccountDetail(APIView):
     """Methods of a specific account"""
-    def get(self, request: HttpRequest, user_id: int) -> Response:
+    def get(self, request: Request, user_id: int) -> Response:
         """Get public account information"""
         try:
             account = get_object_or_404(User, pk=user_id)
