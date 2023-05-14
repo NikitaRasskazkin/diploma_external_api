@@ -52,8 +52,9 @@ class Worker:
                     sentence=recognition.sentence,
                     is_paraphrase=recognition.is_paraphrase,
                     probability=recognition.probability,
+                    sentence_number=index,
                 )
-                for recognition in response.recognition
+                for index, recognition in enumerate(response.recognition)
             ])
             report.model_version = response.version
             report.status = Report.ReportStatus.COMPLETED

@@ -26,6 +26,7 @@ class ReportRecognition(models.Model):
     sentence = models.TextField()
     is_paraphrase = models.BooleanField()
     probability = models.FloatField()
+    sentence_number = models.IntegerField()
 
 
 class ReportLog(models.Model):
