@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from common.api_utils import form_view
 from report.service.report import ReportManager
 from report.service.exceptions import ReportDoesNotExist
+from report.models import Report
 
 
 @login_required
@@ -33,7 +34,16 @@ def registration(request: HttpRequest) -> HttpResponse:
 @login_required
 @form_view
 def profile(request: HttpRequest) -> HttpResponse:
-    return render(request, 'user/profile.html')
+    return render(request, 'user/profile.html', context={
+        'reports': [
+            {
+                'id': report_data.pk,
+                'text': report_data.text if len(report_data.text) < 100 else f'{report_data.text[:98]}...',
+                'date': report_data.create_dttm,
+            }
+            for report_data in Report.objects.filter(user=request.user).order_by('-create_dttm')
+        ]
+    })
 
 
 @login_required

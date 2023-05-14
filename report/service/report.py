@@ -83,7 +83,7 @@ class ReportManager:
             try:
                 queue_place = calculation_manager.get_queue_place(self.report.pk)
             except ReportNotInCalculationQueue:
-                queue_place = None
+                queue_place = 1
                 self.report.refresh_from_db()
         else:
             queue_place = None

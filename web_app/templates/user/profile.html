@@ -5,5 +5,19 @@
 
 {% block 'content' %}
 
-Профиль
+<div class="m-3 ms-5 me-5">
+    <h5 class="mb-3">{{ user }}</h5>
+    <label for="">Отчёты:</label>
+    <table class="table">
+        <tbody>
+            {% for report in reports %}
+            <tr>
+                <td>{{ report.text }}</td>
+                <td>{{ report.date }}</td>
+                <td><a class="btn btn-primary btn-sm" href="{% url 'web_app:report' report.id %}">Открыть</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+</div>
 {% endblock %}

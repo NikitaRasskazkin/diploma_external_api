@@ -84,7 +84,7 @@
                 const probability = Math.floor(recognition.probability * 1000) / 10;
                 const sentence = recognition.sentence;
                 report.append(
-                    `<span class=" sentence ${this.__getColorClass(probability)} p-1 pt-0" title="Вероятность перефраза: ${probability}%">${sentence}</span><span> </span>`
+                    `<span class="sentence ${this.__getColorClass(probability)} p-1 pt-0" title="Вероятность перефраза: ${probability}%">${sentence}</span><span> </span>`
                 );
             }
             return report;
@@ -92,13 +92,13 @@
 
         __getColorClass(probability) {
             const colors = {
-                0.60: 'color-60',
-                0.70: 'color-70',
-                0.80: 'color-80',
-                0.90: 'color-90',
-                1: 'color-100',
+                60: 'color-60',
+                70: 'color-70',
+                80: 'color-80',
+                90: 'color-90',
+                100: 'color-100',
             }
-            if (probability <= 0.5) {
+            if (probability <= 50) {
                 return 'color-50';
             }
             for (let [key, color] of Object.entries(colors)) {
