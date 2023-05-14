@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 from dotenv import dotenv_values
 import mimetypes
+import json
 
 
 if os.environ.get('VARIABLES_INITIALIZED'):
@@ -24,6 +25,8 @@ if os.environ.get('VARIABLES_INITIALIZED'):
     DB_NAME = os.environ.get('DB_NAME')
     DB_HOST = os.environ.get('DB_HOST')
     DB_PORT = os.environ.get('DB_PORT')
+    MODELS_HOSTS: list[str] = json.loads(os.environ['MODELS_HOSTS'])
+    WORKERS_BY_MODEL = int(os.environ.get('WORKERS_BY_MODEL'))
 else:
     config = dotenv_values('.env.developer')
     DEBUG = bool(int(config.get('DEBUG', True)))
@@ -33,6 +36,8 @@ else:
     DB_NAME = config.get('DB_NAME')
     DB_HOST = config.get('DB_HOST')
     DB_PORT = config.get('DB_PORT')
+    MODELS_HOSTS: list[str] = json.loads(config.get('MODELS_HOSTS'))
+    WORKERS_BY_MODEL = int(config.get('WORKERS_BY_MODEL'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

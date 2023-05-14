@@ -8,8 +8,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
 from ..models import Report
-from .exceptions import ReportDoesNotExist
-from .calculation_manager import worker
+from .exceptions import ReportDoesNotExist, ReportNotInCalculationQueue
+from .calculation_manager import calculation_manager
 
 
 class ReportStatus(str, Enum):
@@ -31,7 +31,7 @@ class ReportInfo:
     text: str
     status: ReportStatus
     user: int
-    order: int | None
+    queue_place: int | None
     urls: ReportUrls
 
 
@@ -56,10 +56,17 @@ class ReportManager:
         return ReportManager(report)
 
     def calculate(self) -> None:
-        worker.start(self.report)
+        calculation_manager.calculate(self.report)
 
     def get_report_info(self) -> ReportInfo:
-        self.report.refresh_from_db()
+        if self.report.status == Report.ReportStatus.WAITING:
+            try:
+                queue_place = calculation_manager.get_queue_place(self.report.pk)
+            except ReportNotInCalculationQueue:
+                queue_place = None
+                self.report.refresh_from_db()
+        else:
+            queue_place = None
         statuses = {
             'W': 'WAITING',
             'P': 'IN_PROCESS',
@@ -71,7 +78,7 @@ class ReportManager:
             text=self.report.text,
             status=ReportStatus[statuses[self.report.status]],
             user=self.report.user.pk,
-            order=None,
+            queue_place=queue_place,
             urls=ReportUrls(
                 reverse('web_app:report', kwargs={'report_id': self.report.pk}),
                 reverse('report:detail', kwargs={'report_id': self.report.pk}),
